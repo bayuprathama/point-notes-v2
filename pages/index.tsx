@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
+import { useSession, signIn } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../components/layout'
@@ -36,12 +36,20 @@ export default function Home() {
           </h1>
           <p className="mt-6 text-center text-slate-400">
             Point-Notes is a simple app that allows you to create a{' '}
-            <span className="text-sky-400">small bite-sized notes</span> and
-            easy to digest.
+            <span className="text-sky-400">bite-sized</span> and{' '}
+            <span className="text-sky-400">easy to digest</span> notes.
           </p>
           {!session ? (
             <div className="flex justify-center mt-6 text-sm">
-              <a className="flex items-center justify-center w-full h-12 px-6 text-sm font-semibold text-white rounded-lg shadow-sm cursor-pointer bg-sky-400">
+              <a
+                onClick={(e) => {
+                  e.preventDefault()
+                  signIn('google', {
+                    callbackUrl: 'http://localhost:3000/notes',
+                  })
+                }}
+                className="flex items-center justify-center w-full h-12 px-6 text-sm font-semibold text-white rounded-lg shadow-sm cursor-pointer bg-sky-400"
+              >
                 Sign in
               </a>
             </div>
