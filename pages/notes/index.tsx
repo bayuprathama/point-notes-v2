@@ -2,54 +2,54 @@ import { useQuery } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
 import supabaseWithJwt from '../../utils/supabaseCreateClient'
 import Layout from '../../components/layout'
-import { useState } from 'react'
-import NoteCard from '../../components/noteCard'
+import { useState, useEffect } from 'react'
+import sentenceCase from '../../utils/sentenceCase'
+import Link from 'next/link'
 
 export default function NotesPage() {
   const { data: session } = useSession()
-  const [currentIdx, setCurrentIdx] = useState(0)
-  const [notes, setNotes] = useState()
+
   const supabaseAccessToken = session?.supabaseAccessToken
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: ['notes', supabaseAccessToken],
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ['categories'],
     queryFn: async () => {
       const { data } = await supabaseWithJwt(supabaseAccessToken)
         .from('categories')
-        .select('*, notes(*)')
-        .eq('category', 'javascript')
+        .select('category')
 
       return data
     },
+    enabled: !!supabaseAccessToken,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    // refetchOnMount: false,
   })
 
-  // function handleNextClick() {
-  //   setCurrentIdx((prevIdx) => {
-  //     if (prevIdx === notes.length - 1) return 0
-  //     return prevIdx + 1
-  //   })
-  // }
-
-  // function handlePrevClick() {
-  //   setCurrentIdx((prevIdx) => {
-  //     if (prevIdx === 0) return notes.length - 1
-  //     return prevIdx - 1
-  //   })
-  // }
-  // if (data) {
-  //   const js = data[0].categories.map((data) => {
-  //     if (Object.values(data).includes('javascript')) return data
-  //   })
-  //   setNotes(js[0])
-  console.log(notes)
-  // }
   if (isLoading) {
-    return <p>Loading..</p>
+    return (
+      <Layout>
+        <div className="mt-40">
+          <p className="font-semibold text-center text-white">Loading..</p>
+        </div>
+      </Layout>
+    )
   }
+
+  console.log('render')
   return (
     <Layout>
-      <div>{session && <pre>{JSON.stringify(data, null, 2)}</pre>}</div>
+      <div className="mt-40 text-slate-300">
+        <div>
+          {categories.map((cat) => {
+            return (
+              <div className="py-4 border-b border-slate-700">
+                <Link href={`/notes/${cat.category}`}>
+                  {sentenceCase(cat.category)}
+                </Link>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </Layout>
   )
 }
