@@ -4,21 +4,15 @@ type Note = {
   note: string[]
 }
 
-export default function NoteCard({
-  category,
-  note,
-  handleNextClick,
-  handlePrevClick,
-}) {
+export default function NoteCard({ note, handleNextClick, handlePrevClick }) {
   return (
     <div className="w-full bg-slate-800 rounded-[15px]">
       <div className="px-4 py-2">
-        <div className="flex justify-between text-slate-400">
-          <h1>{sentenceCase(category)}</h1>
-          <p>{`#${note.id}`}</p>
+        <div className=" text-slate-400">
+          <h1 className="text-center">{sentenceCase(note.category)}</h1>
         </div>
         <div className="py-10">
-          <p className="px-4 text-xl font-medium text-center text-slate-200">
+          <p className="px-4 text-lg font-medium text-slate-200">
             {note.content}
           </p>
         </div>
@@ -63,7 +57,7 @@ export default function NoteCard({
             </defs>
           </svg>
         </button>
-        <button className="py-2" onClick={handleNextClick}>
+        <button className="py-2" onClick={handlePrevClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

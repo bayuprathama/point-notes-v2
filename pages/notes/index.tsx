@@ -21,7 +21,7 @@ export default function NotesPage() {
     },
     enabled: !!supabaseAccessToken,
     refetchOnWindowFocus: false,
-    // refetchOnMount: false,
+    refetchOnMount: false,
   })
 
   if (isLoading) {
@@ -37,18 +37,21 @@ export default function NotesPage() {
   console.log('render')
   return (
     <Layout>
-      <div className="mt-40 text-slate-300">
-        <div>
-          {categories.map((cat) => {
+      <div className="mt-4 text-slate-300">
+        <ul className="mt-4">
+          {categories?.map((cat, idx) => {
             return (
-              <div className="py-4 border-b border-slate-700">
-                <Link href={`/notes/${cat.category}`}>
+              <li key={idx} className="border-b border-slate-700">
+                <Link
+                  className="inline-block py-4"
+                  href={`/notes/${cat.category}`}
+                >
                   {sentenceCase(cat.category)}
                 </Link>
-              </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       </div>
     </Layout>
   )
